@@ -17,7 +17,7 @@ export const RecipeCard = StyleSheet.create({
     marginLeft:10,
     marginRight:10,
     marginTop: 20,
-    height: 500,
+    height: "auto",
     borderColor: '#cccccc',
     borderWidth: 1,
     borderRadius: 15
@@ -31,22 +31,14 @@ export const RecipeCard = StyleSheet.create({
     resizeMode:'contain'
   },
   title: {
-    flex: 1,
-    fontSize: 17,
+    fontSize: 12,
     fontWeight: 'bold',
-    textAlign: 'left',
     color: '#444444',
-    marginTop:5,
-    marginRight:5,
-    marginLeft:5,
+    marginBottom:5
    
   },
   category: {
-   marginTop:5,
-    textAlign: 'left',
+   marginBottom:5,
     color: '#444444',
-    marginRight: 5,
-    marginLeft: 5,
-    textDecorationLine:'line-through'
   }
 });

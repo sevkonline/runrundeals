@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, ScrollView, Text, View, TouchableHighlight, Image, Clipboard, Linking } from 'react-native';
+import { FlatList, ScrollView, Text, View, Image, Clipboard, Linking } from 'react-native';
 import styles from './styles';
 import { recipes } from '../../data/dataArrays';
 import MenuImage from '../../components/MenuImage/MenuImage';
@@ -7,6 +7,7 @@ import DrawerActions from 'react-navigation';
 import { getCategoryName } from '../../data/MockDataAPI';
 import { Button, Badge } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/Feather';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default class HomeScreen extends React.Component {
   static navigationOptions = ({ navigation }) => ({
@@ -33,14 +34,14 @@ export default class HomeScreen extends React.Component {
 
   componentDidMount() {
 
-    return fetch('https://runrundeals.herokuapp.com/urunlers')
+    return fetch('https://runrundeals.herokuapp.com/urunlers?_sort=createdAt:DESC')
       .then((response) => response.json())
       .then((responseJson) => {
         this.setState({
           isLoading: false,
           dataSource: responseJson
         }, function () {
-          // In this block you can do something with new state.
+          console.log(responseJson);
         });
       })
       .catch((error) => {
@@ -50,26 +51,33 @@ export default class HomeScreen extends React.Component {
 
 
   writeToClipboard = async (item) => {
-    //To copy the text to clipboard
+    //ClipBoard'a kopyala
     await Clipboard.setString(item);
     alert('Copied This Coupon Code: ' + item);
   };
   renderRecipes = ({ item }) => (
     <View style={styles.container}>
       <Image style={styles.photo} source={{ uri: item.imgurl }} />
-      <Text >{item.title}</Text>
-      <Text style={styles.category}>${item.old_price}</Text>
-      <Text style={styles.title}>${item.price}</Text>
-      <Text style={{ color: 'red',marginBottom:10,fontWeight: 'bold'}}>Discount: {item.discount}</Text>
-      <Button style={{marginBottom:15,marginLeft:10,marginRight:10}} onPress={() => this.writeToClipboard(item.code)} 
-      icon={
-        <Icon
-          name="scissors"
-          size={20}
-          color="white"
-        />
-      } title={"   " + item.code} />
-    <Button title="BUY NOW" type="clear" onPress={() => Linking.openURL(item.url)} />
+      <Text style={styles.title}>{item.title}</Text>
+      <Text style={styles.category} >{item.category}</Text>
+      <Text style={{ marginBottom: 5, textDecorationLine: 'line-through' }}>${item.old_price}</Text>
+      <Text style={{ marginBottom: 5, fontWeight: 'bold', color: 'black' }}>${item.price}</Text>
+      <Text style={{ marginBottom: 10, color: 'green', fontWeight: 'bold', textAlign: 'center' }} >Discount: %{item.discount}</Text>
+      <Text style={{ marginBottom: 10, color: 'red', textAlign: 'center', fontWeight: 'bold' }}>Expiration Date: {item.expirationDate}</Text>
+      <Button color='green' style={{ marginBottom: 10 }} onPress={() => this.writeToClipboard(item.code)}
+        icon={
+          <Icon
+            name="scissors"
+            size={20}
+            color="white"
+          />
+        } title={"   " + item.code} />
+      <TouchableOpacity style={{
+        alignItems: 'center',
+        backgroundColor: '#66b22c',
+        marginTop: 10,
+        padding: 10
+      }} onPress={() => Linking.openURL(item.url)}><Text style={{ color: 'white', fontWeight: 'bold' }}>BUY NOW</Text></TouchableOpacity>
     </View>
 
   );
